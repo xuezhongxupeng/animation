@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+             *{
+              margin: 0;
+              padding: 0;
+              list-style: none;
+              border:0;
+             }
+
+          .all{
+              width: 500px;
+              height: 200px;
+              border: 1px solid blue;
+              padding: 7px;
+              margin: 100px auto;
+              position: relative;
+          }
+
+          .screen{
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+          }
+
+            .screen ul{
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 3000px;
+            }
+          .screen ul li{
+            width: 500px;
+            height: 200px;
+            /*position: relative;*/
+            float: left;
+            overflow: hidden;
+          }
+
+          .all ol{
+            position: absolute;
+
+          }
+            .all ol li.current {
+            background: blue;
+        }
+
+        #arr {
+            display: none;
+        }
+
+        #arr span{
+          width: 40px;
+          height: 40px;
+          position: absolute;
+          top: 50%;
+          left: 5px;
+          margin-top: -20px;
+          cursor: pointer;
+          background: #000;
+          text-align: center;
+          line-height: 40px;
+          color:#fff;
+          opacity: 0.3;
+          font-weight: bold;
+          font-size: 30px;
+          border: 1px solid #fff;
+
+        }
+
+        #arr #right{
+          right: 5px;
+          left:auto;
+        }
+       .all ol{
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        line-height: 20px;
+        text-align: center;
+       }
+
+       .all ol li{
+        float: left;
+        width: 20px;
+        height: 20px;
+        background:#fff;
+        margin-left: 10px;
+        cursor: pointer;
+       }
+        </style>
+    </head>
+    <body>
+         <div class="all" id="box">
+               <div class="screen">
+                     <ul>
+                           <li><img src="images/1.jpg" height="200" width="500" alt=""></li>
+                           <li><img src="images/2.jpg" height="200" width="500" alt=""></li>
+                           <li><img src="images/3.jpg" height="200" width="500" alt=""></li>
+                           <li><img src="images/4.jpg" height="200" width="500" alt=""></li>
+                           <li><img src="images/5.jpg" height="200" width="500" alt=""></li>
+                     </ul>
+                     <ol></ol>
+               </div>
+               <div id="arr">
+                   <span id="left">&lt;</span>
+                   <span id="right">&gt;</span>
+               </div>
+         </div>
+         <!-- // <script src="../animate.js"></script> -->
+         <script>
+
+         function animate(obj,target){
+   clearInterval(obj.timer);
+   obj.timer=setInterval(function(){
+        var leader=obj.offsetLeft;
+        var step=(target-leader)/10;
+        step=step>0?Math.ceil(step):Math.floor(step);
+        leader=leader+step;
+        obj.style.left=leader+"px";
+        if(leader===target){
+          clearInterval(obj.timer)
+        }
+   },15)
+}
+
+
+
+              var box=document.getElementById("box");
+              var arr=document.getElementById("arr");
+              var left=document.getElementById("left");
+              var right=document.getElementById("right");
+              var screen=box.children[0];
+              var ul=screen.children[0];
+              var ol=screen.children[1];
+              var lis=ul.children;
+              var imgwidth=screen.offsetWidth;
+              for(var i=0;i<lis.length;i++){
+                  var  ollis=document.createElement("li");
+                  ol.appendChild(ollis);
+                  ollis.innerHTML=i+1;
+              }
+
+              var ollis=ol.children;
+              var firstimg=lis[0].cloneNode(true);
+              ul.appendChild(firstimg);
+              ollis[0].className="current";
+              for(var i=0;i<ollis.length;i++){
+                 ollis[i].index=i;
+                 ollis[i].onmouseover=function(){
+                  for(var i=0;i<ollis.length;i++){
+                    ollis[i].className="";
+                  }
+                  this.className="current";
+                    var target=-this.index*imgwidth;
+                    animate(ul,target);
+                    pic=square=this.index;
+                 }
+}
+                 box.onmouseover=function(){
+                   arr.style.display="block";
+                   clearInterval(timer);
+                 }
+                 box.onmouseout=function(){
+                   arr.style.display="none";
+                   timer=setInterval(function(){
+                       right.onclick();
+                   },1000)
+                 }
+                  var pic=0;
+                  var square=0;
+                    right.onclick=function(){
+                       if(pic===lis.length-1){
+                         pic=0;
+                         ul.style.left=0;
+                       }
+                       pic++;
+                       var target=-pic*imgwidth;
+                       animate(ul,target);
+                       if(square<ollis.length-1){
+                        square++;
+                       }else{
+                        square=0;
+                       }
+                       for(var i=0;i<ollis.length;i++){
+                        ollis[i].className="";
+                       }
+                       ollis[square].className="current";
+                    }
+
+                    left.onclick=function(){
+                      if(pic===0){
+                        pic=lis.length-1;
+                        ul.style.left=-pic*imgwidth+"px";
+                      }
+
+                      pic--;
+                      var target=-pic*imgwidth;
+                      animate(ul,target);
+                      if(square>0){
+                        square--;
+                      }else{
+                        square=ollis.length-1;
+                      }
+                   for(i=0;i<ollis.length;i++){
+                              ollis[i].className="";
+                          }
+                          ollis[square].className="current";
+                      }
+
+                               timer=setInterval(function(){
+                                    right.onclick();
+                               },1000)
+                    // }
+              // }
+
+
+
+         </script>
+    </body>
+</html>
